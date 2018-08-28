@@ -1,0 +1,12 @@
+_export:
+  plugin:
+    repositories:
+      - file://${repos}
+      # - https://jitpack.io
+    dependencies:
+      - io.digdag.plugin:digdag-plugin-azure:0.0.1
+      # - com.github.<yourRepo>:digdag-plugin-azure:v0.0.1
+
++azure:
+  blob_wait>: sample/sample.txt
+  container: temp
