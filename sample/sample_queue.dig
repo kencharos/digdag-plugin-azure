@@ -7,6 +7,8 @@ _export:
       - io.digdag.plugin:digdag-plugin-azure:0.1.0
       # - com.github.<yourRepo>:digdag-plugin-azure:v0.1.0
 
-+azure:
-  blob_wait>: sample/sample.txt
-  container: temp
++poll_queue_5_times:
+   loop>: 5
+   _do:
+      +azure_queue:
+         storage_queue_wait>: some-queue

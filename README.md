@@ -4,7 +4,7 @@ digdag plugin for Microsoft Azure.
 
 ## version 
 
-0.0.1
+0.1.0
 
 ## Tasks
 
@@ -40,11 +40,28 @@ blob_wait>: some/directory/
 container: upload
 ```
 
+
+### storage_queue_wait
+
+operator waits for message to appear in Azure Queue Storage.
+
+
+#### Secrets
+
++ azure.queue.connectionString - your storage account connectionString.
+
+#### Options
+
++ storage_queue_wait>: queueName (required)
+
+#### Examples
+
+```
+storage_queue_wait>: some-queue
+```
+
 ## TODO
 
-- [ ] wait storage queue task
-- [ ] change cosmos db RU task
-- [ ] publish plugin to Jitpack
 - [ ] unit tests
 
 ## Usage

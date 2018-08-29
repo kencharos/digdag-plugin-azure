@@ -21,7 +21,9 @@ public class AzurePlugin implements Plugin {
 
         @Override
         public List<OperatorFactory> get() {
-            return Arrays.asList(new BlobWaitOperatorFactory());
+            return Arrays.asList(
+                new BlobWaitOperatorFactory(),
+                new StorageQueueWaitOperatorFactory());
         }
     }
 }
