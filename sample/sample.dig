@@ -4,8 +4,8 @@ _export:
       - file://${repos}
       # - https://jitpack.io
     dependencies:
-      - io.digdag.plugin:digdag-plugin-azure:0.1.0
-      # - com.github.<yourRepo>:digdag-plugin-azure:v0.1.0
+      - io.digdag.plugin:digdag-plugin-azure:0.1.1
+      # - com.github.<yourRepo>:digdag-plugin-azure:v0.1.1
 
 +azure:
   blob_wait>: sample/sample.txt

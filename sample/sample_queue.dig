@@ -4,11 +4,15 @@ _export:
       - file://${repos}
       # - https://jitpack.io
     dependencies:
-      - io.digdag.plugin:digdag-plugin-azure:0.1.0
-      # - com.github.<yourRepo>:digdag-plugin-azure:v0.1.0
+      - io.digdag.plugin:digdag-plugin-azure:0.1.1
+      # - com.github.kencharos:digdag-plugin-azure:v0.1.1
 
 +poll_queue_5_times:
    loop>: 5
    _do:
       +azure_queue:
          storage_queue_wait>: some-queue
+         retrieve: true
+         visibilityTimeout: 5
+      +display_message:
+         echo>: "${queue.last_object.messageId} ${queue.last_object.message} ${queue.last_object.popReceipt}"

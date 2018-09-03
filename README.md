@@ -4,7 +4,7 @@ digdag plugin for Microsoft Azure.
 
 ## version 
 
-0.1.0
+0.1.1
 
 ## Tasks
 
@@ -23,6 +23,14 @@ so that you can use path of prefix.
 
 + blob_wait>: path or prefix from container (required)
 + container: container name (required)
+
+#### Outputs
+
++ blob.last_object
+    + name
+    + metadata
+    + properties
+
 
 #### Examples
 
@@ -44,6 +52,7 @@ container: upload
 ### storage_queue_wait
 
 operator waits for message to appear in Azure Queue Storage.
+You can choose peek or retrieve message.  peek is default.
 
 
 #### Secrets
@@ -53,12 +62,36 @@ operator waits for message to appear in Azure Queue Storage.
 #### Options
 
 + storage_queue_wait>: queueName (required)
++ retrieve: if true, message get by retrieve. if false, message get by peek default false.
++ visibilityTimeout: if retrieve is true, use this value as visibilityTimeout in seconds. default is 30.
+
+
+#### Outputs
+
++ queue.last_object
+    + messageId
+    + message
+    + popReceipt
+    + insertionTime
+    + expirationTime
+    + nextVisibleTime
 
 #### Examples
+
+wait message by peek
 
 ```
 storage_queue_wait>: some-queue
 ```
+
+wait message by retrieve with custom visibilityTimeout
+
+```
+storage_queue_wait>: some-queue
+retrieve: true
+visibilityTimeout: 300
+```
+
 
 ## TODO
 
@@ -92,6 +125,8 @@ Then run
 ```sh
 digdag selfupdate
 digdag run --project sample sample.dig -p repos=`pwd`/build/repo
+
+-p repos=C:\Users\kentaro.maeda.ULDOMAIN\Documents\git\digdag\digdag-plugin-azure\build\repo
 ```
 
 blob_wait task will poll until blob created.
@@ -111,7 +146,7 @@ git tag <version>
 git push origin <version>
 ```
 
-https://jitpack.io/<who>/digdag-plugin-azure/<version>
+https://jitpack.io/<your account>/digdag-plugin-azure/<version>
 
 Now, you can load the artifact from dig file as follows:
 
@@ -121,7 +156,7 @@ _export:
     repositories:
       - https://jitpack.io
     dependencies:
-      - com.github.myui:digdag-plugin-azure:<version>
+      - com.github.<your account>:digdag-plugin-azure:<version>
 ```
 
 ## Further reading

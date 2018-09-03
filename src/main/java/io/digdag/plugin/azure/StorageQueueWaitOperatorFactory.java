@@ -61,6 +61,9 @@ public class StorageQueueWaitOperatorFactory implements OperatorFactory {
             SecretProvider azureSecrets = secrets.getSecrets("azure").getSecrets("queue");
             String connectionString = azureSecrets.getSecret("connectionString");
 
+            boolean retrieve = params.getOptional("retrieve", Boolean.class).or(Boolean.FALSE).booleanValue();
+            int visibilityTimeout = params.getOptional("visibilityTimeout", Integer.class).or(30).intValue();
+
             // Create Client
             CloudQueueClient client = buildClient(connectionString);
 
@@ -71,7 +74,10 @@ public class StorageQueueWaitOperatorFactory implements OperatorFactory {
                     .retryUnless(StorageException.class, e -> true)
                     .run(s -> {
                             CloudQueue q = client.getQueueReference(queueName);
-                            CloudQueueMessage peekedMessage = q.peekMessage();
+
+                            CloudQueueMessage peekedMessage =
+                                    retrieve ? q.retrieveMessage(visibilityTimeout, null, null)
+                                            : q.peekMessage();
                             if (peekedMessage != null) {
                                 return Optional.of(peekedMessage);
                             } else {
@@ -90,8 +96,15 @@ public class StorageQueueWaitOperatorFactory implements OperatorFactory {
             Config params = request.getConfig().getFactory().create();
             Config object = params.getNestedOrSetEmpty("queue").getNestedOrSetEmpty("last_object");
             object.set("messageId", message.getId());
+            try {
+                object.set("message", message.getMessageContentAsString());
+            } catch (StorageException e) {
+                // Ignore;
+            };
+            object.set("popReceipt", message.getPopReceipt());
             object.set("insertionTime", message.getInsertionTime());
             object.set("expirationTime", message.getExpirationTime());
+            object.set("nextVisibleTime", message.getNextVisibleTime());
 
             return params;
         }
